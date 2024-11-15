@@ -2,7 +2,7 @@
 
 ## Abstract:
 Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that was not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
-This data story will try to educate a director with regards to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie / book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection, screenwriting and casting. 
+This data story will try to educate a director with regards to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie/book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection, screenwriting and casting. 
 
 
 ## Research Questions:
