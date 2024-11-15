@@ -24,7 +24,7 @@ The merging process below is executed in the Jupyter Notebook books_movies_clean
 ### Merging Process
 
 1. **Initial Data Loading**:  
-Since the datasets should not be stored directly in the github, they were uploaded onto huggingface. The file data_loader contains a function that downloads all files and stores them in the folder `data`. The notebook `books_movies_cleaning.ipynb` calls the function before starting the merging process.  
+The datsets are stored on huggingface. The file data_loader contains a function that downloads all files and stores them in `data`. The notebook `books_movies_cleaning.ipynb` calls the function in the beginning.  
 
 2. **Dataset Merging**:
    - Both `wiki_book_movie_ids_matching.csv` and `movies.csv` originally contained duplicates, which were removed.
@@ -48,7 +48,7 @@ Sentence transformer embeddings are used to measure the similarity between summa
 Similarly, summary sentiments are computed. As for the embeddings, the summaries are divided into chunks that receive a sentiment score which is then averaged and compared. This approach provides a holistic view of sentiment similarity, which is another factor that may impact adaptation success. For similar reasons as with the summary similarity, [siebert/sentiment-roberta-large-english](https://huggingface.co/siebert/sentiment-roberta-large-english) was selected for this task.
 
 ### Success metric
-The analysis will be performed with regard to two success metrics, box office revenue and reviews. These will firstly be treated separately to reduce potential biases, but can be combined later on to reduce complexity for the reader.
+The analysis will be performed regarding two success metrics, box office revenue and reviews. First, they are treated separately to reduce potential biases, but can be combined later for further analysis.
 
 ### Search for confounders
 Regression models will be used to find which factors correlate the most with movie success. This is done on all movies in the dataset and can be used to identify confounders that are unrelated to whether the movie is based on a book or not. They need to be controlled for further analysis.
