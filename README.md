@@ -19,10 +19,9 @@ Book Movie Reviews : https://www.kaggle.com/datasets/captaindylan/books-movies-r
 Revenues from TMDB (2024): https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies 
 
 All of the datasets can be merged by IMDB (or TMDB) IDs or by their titles. The “CMU Book Summaries” dataset is for the plot similarity analysis, “Book Movie Reviews” helps in matching books to their adaptations and the “Revenues from TMDB” dataset increases the number of revenues that are available.
+The merging process below is executed in the Jupyter Notebook books_movies_cleaning, which produced the final dataset. The final dataset is uploaded in the github and used in the results.ipynb file. 
 
 ### Merging Process
-
-The merging process is detailed in the Jupyter Notebook books_movies_cleaning, which produced the final dataset.
 
 1. **Initial Data Loading**:  
    The files `movie.metadata.tsv`, `movies.csv`, and `wiki_book_movie_ids_matching.csv` were loaded into the Jupyter Notebook. The `movie.metadata.tsv` file contains details about films, while the `wiki_book_movie_ids_matching.csv` file provides film names with corresponding book names.
@@ -58,7 +57,7 @@ Regression models will be used to find which factors correlate the most with mov
 The success of a movie depends on confounders that are unrelated to whether it is based on a book or not. The benefit of basing a movie on a book can be determined through pairwise matching. A propensity score is calculated based on confounders identified beforehand. Movies with similar propensity scores are then matched with the main difference being whether they are based on a book or not.
 
 ### Interpretation and conclusions
-Using regression methods alongside descriptive statistics and keeping in mind the identified cofounders the most important correlations can be found. Analysing these results will hopefully enable meaningful conclusions.
+Using regression methods, ANOVA and descriptive statistics and keeping in mind the identified cofounders the most important correlations can be found. Analysing these results will hopefully enable meaningful conclusions.
 
 ## Proposed timeline
 1. Clean and Prepare dataset by matching films with books and adding summaries from film and books such as missing box office revenues 
@@ -71,7 +70,7 @@ Using regression methods alongside descriptive statistics and keeping in mind th
 
 ## Organization within the team:
 - Luca : Finding suitable language models, work with language models, data visualisations, statistical model fitting
-- Danja: Dataset research,  first part of dataset merge, search methods, story telling
+- Danja: Dataset research,  first part of dataset merge, search methods, primary data visualization, story telling
 - Silvan: Second part of dataset merge, readme formatting, confounders identification and matching
 - Robin: Dataset research, abstract, readme formatting, confounders identification and matching
 - Franziska: Github organisation, clean jupyter notebooks, create clean python files, conception of website, statistical model fitting
