@@ -35,29 +35,3 @@ Because Data sets should not be loaded onto the github page, they were uploaded 
 2. **final_dataset.csv**:
    *(movie_id,movie_cluster,movie_name,release_date,runtime_x,language,country,genres,movie_year,index,id,BookTitle,BookYear,Author,full name,tmdb_id,id_goodreads,imdbid,runtime_y,revenue,book_id,normalized_rating_x,standardized_rating_x,normalized_rating_y,standardized_rating_y,length,review_count)*
 
----
-
-### Merging Process
-
-The merging process is detailed in the Jupyter Notebook books_movies_cleaning, which produced the final dataset.
-
-1. **Initial Data Loading**:  
-   The files `movie.metadata.tsv`, `movies.csv`, and `wiki_book_movie_ids_matching.csv` were loaded into the Jupyter Notebook. The `movie.metadata.tsv` file contains details about films, while the `wiki_book_movie_ids_matching.csv` file provides film names with corresponding book names.
-
-2. **Duplicate Removal**:  
-   - Both `wiki_book_movie_ids_matching.csv` and `movies.csv` originally contained duplicates, which were removed.
-   - The `runtime` from `movies.csv` was added to `wiki_book_movie_ids_matching.csv` using `imdbid` as the key.
-
-3. **Dataset Merging**:  
-   - The resulting dataset was merged with `movie.metadata.tsv` on `movie_name` and `movie_year`. Since a single book can correspond to multiple movies, matching by `movie_name` alone was insufficient; therefore, `movie_year` was also used to improve the match.
-   - Some duplicates remained after this merge. They were resolved using the unique identifiers `imdbid`, `movie_id`, and `id_goodreads`.
-
-4. **Filtering Non-Applicable Films**:  
-   - Films based on multiple books were removed, as they did not align with the research questions.
-
-5. **Manual Matching for Accuracy**:  
-   - 45 films with the same title and release year were manually reviewed to prevent incorrect merges. The movies in `movie.metadata.tsv` were compared with those in `wiki_book_movie_ids_matching.csv` using `runtime` as an additional matching criterion.
-   - If `runtime` was insufficient to resolve matches, the TMDB database was referenced to cross-verify entries, ensuring accurate film matches.
-
-6. **Adding Book Summaries**:  
-   - Following the above steps, additional datasets containing book summaries were loaded and merged into the final dataset.
