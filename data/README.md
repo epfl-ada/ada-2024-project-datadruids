@@ -1,5 +1,5 @@
 # Datasets Explained
-Because Data sets should not be loaded onto the github page, they were uploaded on hugging face and are loaded in the beginning of the books_movies_cleaning.ipynb file
+Because Data sets should not be loaded onto the github page, they were uploaded on hugging face and are loaded and stored as csv files in the beginning of the books_movies_cleaning.ipynb file. 
 
 ### Primary Datasets
 
