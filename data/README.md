@@ -1,4 +1,5 @@
 # Datasets Explained
+Because Data sets can sadly not be loaded on our github page we used an elegant solution by loading them on hugging face and accessing them from there 
 
 ### Primary Datasets
 
@@ -21,11 +22,17 @@
    - **booksmovies.csv**: *(id, BookTitle, BookAltTitle, BookYear, BookLink, Author, FilmTitle, FilmLink, FilmYear, ISBN)*
    - **merged_movies_books_cleaned.csv**: *(movie_id, movie_cluster, movie_name, release_date, budget, runtime_x, language, country, genres, movie_year, index, id, BookTitle, BookYear, Author, full name, tmdb_id, id_goodreads, imdbid, runtime_y)*
    - **wiki_book_movie_ids_matching.csv**: *(index, id, BookTitle, BookYear, Author, FilmTitle, FilmYear, full name, tmdb_id, id_goodreads, imdbid)*
+  
+5. **CPI Scores**
+  Source: [Consumer Price Index U.S.](https://fred.stlouisfed.org/series/CPIAUCNS )
+   - **CPIAUCNS.csv**: *DATE,CPIAUCNS*
 
 ### Datasets Extracted from Jupyter Notebooks
 
 1. **bookfilm_summaries_with_similarity_and_sentiment.csv**:  
    *(movie_id, book_title, movie_name, book_summary, film_summary, similarity, film_sentiment, film_sentiment_score, book_sentiment, book_sentiment_score)*
+2. **final_dataset.csv**:
+   *(movie_id,movie_cluster,movie_name,release_date,runtime_x,language,country,genres,movie_year,index,id,BookTitle,BookYear,Author,full name,tmdb_id,id_goodreads,imdbid,runtime_y,revenue,book_id,normalized_rating_x,standardized_rating_x,normalized_rating_y,standardized_rating_y,length,review_count)*
 
 ---
 
@@ -53,6 +60,7 @@ The merging process is detailed in the Jupyter Notebook books_movies_cleaning, w
 
 6. **Adding Book Summaries**:  
    - Following the above steps, additional datasets containing book summaries were loaded and merged into the final dataset.
+
 
 ---
 
