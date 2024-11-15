@@ -18,7 +18,7 @@ Book Movie Reviews : https://www.kaggle.com/datasets/captaindylan/books-movies-r
 
 Revenues from TMDB (2024): https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies 
 
-All of the datasets can be merged by IMDB (or TMDB) IDs or by their titles. The “CMU Book Summaries” dataset is for the plot similarity analysis, “Book Movie Reviews” helps in matching books to their adaptations and the “Revenues from TMDB” dataset increases the number of revenues that are available.
+More information about the datasets can be found in the README file stored in the data folder. 
 The merging process below is executed in the Jupyter Notebook books_movies_cleaning, which produces the final dataset. The final dataset is uploaded on github and used in the results.ipynb file. 
 
 ### Merging Process
