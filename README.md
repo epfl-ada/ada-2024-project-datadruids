@@ -57,7 +57,8 @@ Regression models will be used to find which factors correlate the most with mov
 ### Matching analysis
 The success of a movie depends on confounders that are unrelated to whether it is based on a book or not. The benefit of basing a movie on a book can be determined through pairwise matching. A propensity score is calculated based on confounders identified beforehand. Movies with similar propensity scores are then matched with the main difference being whether they are based on a book or not.
 
-### 
+### Interpretation and conclusions
+Using linear and multilinear regression and keeping in mind the identified cofounders the most important correlations can be found. Analysing these results will enable meaningful conclusions.
 
 ## Proposed timeline
 1. Clean and Prepare dataset by matching films with books and adding summaries from film and books such as missing box office revenues 
