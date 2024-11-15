@@ -19,12 +19,12 @@ Book Movie Reviews : https://www.kaggle.com/datasets/captaindylan/books-movies-r
 Revenues from TMDB (2024): https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies 
 
 All of the datasets can be merged by IMDB (or TMDB) IDs or by their titles. The “CMU Book Summaries” dataset is for the plot similarity analysis, “Book Movie Reviews” helps in matching books to their adaptations and the “Revenues from TMDB” dataset increases the number of revenues that are available.
-The merging process below is executed in the Jupyter Notebook books_movies_cleaning, which produced the final dataset. The final dataset is uploaded in the github and used in the results.ipynb file. 
+The merging process below is executed in the Jupyter Notebook books_movies_cleaning, which produces the final dataset. The final dataset is uploaded on github and used in the results.ipynb file. 
 
 ### Merging Process
 
 1. **Initial Data Loading**:  
-   The files `movie.metadata.tsv`, `movies.csv`, and `wiki_book_movie_ids_matching.csv` were loaded into the Jupyter Notebook. The `movie.metadata.tsv` file contains details about films, while the `wiki_book_movie_ids_matching.csv` file provides film names with corresponding book names.
+Since the datasets should not be stored directly in the github, they were uploaded onto huggingface. The file data_loader contains a function that downloads all files and stores them in the folder `data`. The notebook `books_movies_cleaning.ipynb` calls the function before starting the merging process.  
 
 2. **Dataset Merging**:
    - Both `wiki_book_movie_ids_matching.csv` and `movies.csv` originally contained duplicates, which were removed.
