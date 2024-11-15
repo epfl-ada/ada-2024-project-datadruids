@@ -41,7 +41,7 @@ def load_data():
     TMDB_movie_dataset_reduced_df.to_csv('../../data/TMDB_movie_dataset_reduced.csv', index=False)
     plot_summaries_df.to_csv('../../data/plot_summaries.txt', index=False)
     movies_df.to_csv('../../data/movies.csv', index=False)
-    movie_metadata_df.to_csv('../../data/movie_metadata.tsv','\t', index=False)
+    movie_metadata_df.to_csv('../../data/movie_metadata.tsv',sep='\t', index=False)
     merged_movies_books_cleaned_df.to_csv('../../data/merged_movies_books_cleaned.csv', index=False)
     CPIAUCNS_df.to_csv('../../data/CPIAUCNS.csv', index=False)
     booksummaries_cleaned_df.to_csv('../../data/booksummaries_cleaned.csv', index=False)
