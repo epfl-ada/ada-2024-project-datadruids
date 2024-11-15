@@ -1,8 +1,4 @@
-# ada-2024-project-datadruids
-ada-2024-project-datadruids created by GitHub Classroom
-Readme.md file containing the detailed project proposal (up to 1000 words). Your README.md should contain:
-
-## What book to pick to create the next Lord of the Rings?
+# What book to pick to create the next Lord of the Rings?
 
 ## Abstract:
 Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that was not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
