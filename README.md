@@ -1,30 +1,30 @@
 # Finding the next Lord of the Rings: From Book to Cinematic Glory
 
 ## Abstract:
-Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that was not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
-This data story will try to educate a director with regards to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie / book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection, screenwriting and casting. 
+Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that has not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
+This data story will try to educate a director in regard to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie and book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection, screenwriting and casting. 
 
 
 ## Research Questions:
 - How advantageous is it for a movie to be based on a book?
 - What features of a book are the most important for a successful movie adaptation?
 - How does the similarity of plot and sentiment between a book and its adaptation influence the movie success?
-- If there are multiple adaptations of the same book, what main factors set these movies apart? Which ones are most     successful?
+- If there are multiple adaptations of the same book, what main factors set these movies apart? Which ones are the most successful?
 
 ## Proposed additional datasets: 
-CMU Book Summaries : https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset
+- [CMU Book Summaries](https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset)
 
-Book Movie Reviews : https://www.kaggle.com/datasets/captaindylan/books-movies-reviews?resource=download 
+- [Book Movie Reviews](https://www.kaggle.com/datasets/captaindylan/books-movies-reviews?resource=download)
 
-Revenues from TMDB (2024): https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies 
+- [Revenues from TMDB (2024)](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies)
 
-More information about the datasets can be found in the README file stored in the data folder. 
-The merging process below is executed in the Jupyter Notebook books_movies_cleaning, which produces the final dataset. The final dataset is uploaded on github and used in the results.ipynb file. 
+More information about the datasets can be found in the `data/README.md` file. 
+The merging process below is executed in the Jupyter Notebook `books_movies_cleaning`, which produces the final dataset. The final dataset is uploaded on github and used in the `results.ipynb` file. 
 
 ### Merging Process
 
 1. **Initial Data Loading**:  
-Since the datasets should not be stored directly in the github, they were uploaded onto huggingface. The file data_loader contains a function that downloads all files and stores them in the folder `data`. The notebook `books_movies_cleaning.ipynb` calls the function before starting the merging process.  
+Since the datasets should not be stored directly in the GitHub, they have been uploaded to huggingface. The file `data_loader` contains a function that downloads all files and stores them in the folder `data`. The notebook `books_movies_cleaning.ipynb` calls the function before starting the merging process.  
 
 2. **Dataset Merging**:
    - Both `wiki_book_movie_ids_matching.csv` and `movies.csv` originally contained duplicates, which were removed.
@@ -38,7 +38,7 @@ Since the datasets should not be stored directly in the github, they were upload
    - Finally, numerical book and movie ratings were added to the dataset
 
 3. **Adding Book Summaries**:  
-   - Additional dataset containing book summaries was loaded and merged.
+   - An additional dataset containing book summaries was loaded and merged.
 
 
 ## Methods
