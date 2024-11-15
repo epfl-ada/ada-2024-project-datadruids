@@ -38,7 +38,7 @@ Since the datasets should not be stored directly in the github, they were upload
    - Finally, numerical book and movie ratings were added to the dataset
 
 3. **Adding Book Summaries**:  
-   - Additional dataset containing book summaries was loaded and merged.
+   - Additional dataset containing book summaries was loaded and merged only with movie_id, book_id and movie_summary. This dataset is stored on hugginface. 
 
 
 ## Methods
