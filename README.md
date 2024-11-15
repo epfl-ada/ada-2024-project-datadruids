@@ -73,4 +73,4 @@ Using regression methods, ANOVA and descriptive statistics and keeping in mind t
 - Danja: Dataset research,  first part of dataset merge, search methods, primary data visualization, story telling
 - Silvan: Second part of dataset merge, readme formatting, confounders identification and matching
 - Robin: Dataset research, abstract, readme formatting, confounders identification and matching
-- Franziska: Github organisation, clean jupyter notebooks, create clean python files, conception of website, statistical model fitting
+- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, statistical model fitting
