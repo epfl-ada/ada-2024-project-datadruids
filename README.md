@@ -1,4 +1,4 @@
-# What book to pick to create the next Lord of the Rings?
+# Finding the next Lord of the Rings, from Book to Cinematic Glory
 
 ## Abstract:
 Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that was not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
