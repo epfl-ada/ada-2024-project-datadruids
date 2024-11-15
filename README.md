@@ -17,15 +17,16 @@ This data story will try to educate a director with regards to these common pitf
 
 ## Proposed additional datasets: 
 CMU Book Summaries : https://www.kaggle.com/datasets/ymaricar/cmu-book-summary-dataset
+
 Book Movie Reviews : https://www.kaggle.com/datasets/captaindylan/books-movies-reviews?resource=download 
-Revenues from TMDB (2024):
-https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies 
+
+Revenues from TMDB (2024): https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies 
 
 All of the datasets can be merged by IMDB (or TMDB) IDs or by their titles. The “CMU Book Summaries” dataset is for the plot similarity analysis, “Book Movie Reviews” helps in matching books to their adaptations and the “Revenues from TMDB” dataset increases the number of revenues that are available.
 
 ## Methods
 ### Language Model
-Sentence Transformer embeddings are used to measure the similarity between summaries. Given the model’s input length constraints, each summary is split into chunks with small text overlaps that fit within the model’s limits to minimize semantic information loss. Then, the chunks are embedded and averaged to create a single embedding representing the entire summary. Lastly, cosine similarity is calculated for the book and movie embeddings, with higher scores suggesting closer thematic alignment, which can indicate adaptation fidelity. [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) was selected as model due to its [performance and manageable size](https://www.sbert.net/docs/sentence_transformer/pretrained_models.html).
+Sentence transformer embeddings are used to measure the similarity between summaries. Given the model’s input length constraints, each summary is split into chunks with small text overlaps that fit within the model’s limits to minimize semantic information loss. Then, the chunks are embedded and averaged to create a single embedding representing the entire summary. Lastly, cosine similarity is calculated for the book and movie embeddings, with higher scores suggesting closer thematic alignment, which can indicate adaptation fidelity. [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) was selected as model due to its [performance and manageable size](https://www.sbert.net/docs/sentence_transformer/pretrained_models.html).
 
 As above the summaries are divided into chunks that receive a sentiment score (e.g. positive, neutral, negative) which is then averaged and compared. This approach provides a holistic view of sentiment similarity, which is another factor that may impact adaptation success. For similar reasons as with the summary similarity, [siebert/sentiment-roberta-large-english](https://huggingface.co/siebert/sentiment-roberta-large-english) was selected for this task.
 
