@@ -35,7 +35,7 @@ The merging process is detailed in the Jupyter Notebook books_movies_cleaning, w
    - Films based on multiple books were removed, as they did not align with the research questions.
    - 45 films with the same title and release year were manually reviewed to prevent incorrect merges. The movies in `movie.metadata.tsv` were compared with those in `wiki_book_movie_ids_matching.csv` using `runtime` as an additional matching criterion.
    - If `runtime` was insufficient to resolve matches, the TMDB database was referenced to cross-verify entries, ensuring accurate film matches.
-   - Revenues were sparse. Therefore additional revenues were collected from the TMDB_movie_dataset_reduced.csv dataset and used to complete the original revenues.
+   - Revenues were sparse. Therefore, additional revenues were collected from the TMDB_movie_dataset_reduced.csv dataset and used to complete the original revenues.
    - Finally, numerical book and movie ratings were added to the dataset
 
 3. **Adding Book Summaries**:  
@@ -43,10 +43,10 @@ The merging process is detailed in the Jupyter Notebook books_movies_cleaning, w
 
 
 ## Methods
-### Language Model
-Sentence transformer embeddings are used to measure the similarity between summaries. Given the model’s input length constraints, each summary is split into chunks with small text overlaps that fit within the model’s limits to minimize semantic information loss. Then, the chunks are embedded and averaged to create a single embedding representing the entire summary. Lastly, cosine similarity is calculated for the book and movie embeddings, with higher scores suggesting closer thematic alignment, which can indicate adaptation fidelity. [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) was selected as model due to its [performance and manageable size](https://www.sbert.net/docs/sentence_transformer/pretrained_models.html).
+### Natural Language Processing
+Sentence transformer embeddings are used to measure the similarity between summaries. Given the model's input length constraints, each summary is split into chunks with small text overlaps that fit within the model's limits to minimize semantic information loss. Then, the chunks are embedded and averaged to create a single embedding representing the entire summary. Lastly, cosine similarity is calculated for the book and movie embeddings, with higher scores suggesting closer thematic alignment, which can indicate adaptation fidelity. [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) was selected as model due to its [performance and manageable size](https://www.sbert.net/docs/sentence_transformer/pretrained_models.html).
 
-As above the summaries are divided into chunks that receive a sentiment score (e.g. positive, neutral, negative) which is then averaged and compared. This approach provides a holistic view of sentiment similarity, which is another factor that may impact adaptation success. For similar reasons as with the summary similarity, [siebert/sentiment-roberta-large-english](https://huggingface.co/siebert/sentiment-roberta-large-english) was selected for this task.
+Similarly, summary sentiments are computed. As for the embeddings, the summaries are divided into chunks that receive a sentiment score which is then averaged and compared. This approach provides a holistic view of sentiment similarity, which is another factor that may impact adaptation success. For similar reasons as with the summary similarity, [siebert/sentiment-roberta-large-english](https://huggingface.co/siebert/sentiment-roberta-large-english) was selected for this task.
 
 ### Success metric
 The analysis will be performed with regard to two success metrics, box office revenue and reviews. These will firstly be treated separately to reduce potential biases, but can be combined later on to reduce complexity for the reader.
