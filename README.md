@@ -19,7 +19,7 @@ This data story will try to educate a director in regard to these common pitfall
 - [Revenues from TMDB (2024)](https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies)
 
 More information about the datasets can be found in the `data/README.md` file. 
-The merging process below is executed in the Jupyter Notebook `books_movies_cleaning`, which produces the final dataset. The final dataset is uploaded on github and used in the `results.ipynb` file. 
+The merging process below is executed in the Jupyter Notebook `books_movies_cleaning`, which produces the final dataset. The final dataset is uploaded on GitHub and used in the `results.ipynb` file. 
 
 ### Merging Process
 
@@ -57,7 +57,7 @@ Regression models will be used to find which factors correlate the most with mov
 The success of a movie depends on confounders that are unrelated to whether it is based on a book or not. The benefit of basing a movie on a book can be determined through pairwise matching. A propensity score is calculated based on confounders identified beforehand. Movies with similar propensity scores are then matched with the main difference being whether they are based on a book or not.
 
 ### Interpretation and conclusions
-Using regression methods, ANOVA and descriptive statistics and keeping in mind the identified cofounders the most important correlations can be found. Analysing these results will hopefully enable meaningful conclusions.
+Using regression methods, ANOVA and descriptive statistics and keeping in mind the identified confounders the most important correlations can be found. Analysing these results will hopefully enable meaningful conclusions.
 
 ## Proposed timeline
 1. Clean and Prepare dataset by matching films with books and adding summaries from film and books such as missing box office revenues 
