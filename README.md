@@ -20,6 +20,28 @@ Revenues from TMDB (2024): https://www.kaggle.com/datasets/asaniczka/tmdb-movies
 
 All of the datasets can be merged by IMDB (or TMDB) IDs or by their titles. The “CMU Book Summaries” dataset is for the plot similarity analysis, “Book Movie Reviews” helps in matching books to their adaptations and the “Revenues from TMDB” dataset increases the number of revenues that are available.
 
+### Merging Process
+
+The merging process is detailed in the Jupyter Notebook books_movies_cleaning, which produced the final dataset.
+
+1. **Initial Data Loading**:  
+   The files `movie.metadata.tsv`, `movies.csv`, and `wiki_book_movie_ids_matching.csv` were loaded into the Jupyter Notebook. The `movie.metadata.tsv` file contains details about films, while the `wiki_book_movie_ids_matching.csv` file provides film names with corresponding book names.
+
+2. **Dataset Merging**:
+   - Both `wiki_book_movie_ids_matching.csv` and `movies.csv` originally contained duplicates, which were removed.
+   - The `runtime` from `movies.csv` was added to `wiki_book_movie_ids_matching.csv` using `imdbid` as the key.
+   - The resulting dataset was merged with `movie.metadata.tsv` on `movie_name` and `movie_year`. Since a single book can correspond to multiple movies, matching by `movie_name` alone was insufficient; therefore, `movie_year` was also used to improve the match.
+   - Some duplicates remained after this merge. They were resolved using the unique identifiers `imdbid`, `movie_id`, and `id_goodreads`.  
+   - Films based on multiple books were removed, as they did not align with the research questions.
+   - 45 films with the same title and release year were manually reviewed to prevent incorrect merges. The movies in `movie.metadata.tsv` were compared with those in `wiki_book_movie_ids_matching.csv` using `runtime` as an additional matching criterion.
+   - If `runtime` was insufficient to resolve matches, the TMDB database was referenced to cross-verify entries, ensuring accurate film matches.
+   - Revenues were sparse. Therefore additional revenues were collected from the TMDB_movie_dataset_reduced.csv dataset and used to complete the original revenues.
+   - Finally, numerical book and movie ratings were added to the dataset
+
+3. **Adding Book Summaries**:  
+   - Additional dataset containing book summaries was loaded and merged.
+
+
 ## Methods
 ### Language Model
 Sentence transformer embeddings are used to measure the similarity between summaries. Given the model’s input length constraints, each summary is split into chunks with small text overlaps that fit within the model’s limits to minimize semantic information loss. Then, the chunks are embedded and averaged to create a single embedding representing the entire summary. Lastly, cosine similarity is calculated for the book and movie embeddings, with higher scores suggesting closer thematic alignment, which can indicate adaptation fidelity. [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) was selected as model due to its [performance and manageable size](https://www.sbert.net/docs/sentence_transformer/pretrained_models.html).
