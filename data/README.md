@@ -1,4 +1,5 @@
 # Datasets Explained
+Because Data sets should not be loaded onto the github page, they were uploaded on hugging face and are loaded in the beginning of the books_movies_cleaning.ipynb file
 
 ### Primary Datasets
 
@@ -21,11 +22,18 @@
    - **booksmovies.csv**: *(id, BookTitle, BookAltTitle, BookYear, BookLink, Author, FilmTitle, FilmLink, FilmYear, ISBN)*
    - **merged_movies_books_cleaned.csv**: *(movie_id, movie_cluster, movie_name, release_date, budget, runtime_x, language, country, genres, movie_year, index, id, BookTitle, BookYear, Author, full name, tmdb_id, id_goodreads, imdbid, runtime_y)*
    - **wiki_book_movie_ids_matching.csv**: *(index, id, BookTitle, BookYear, Author, FilmTitle, FilmYear, full name, tmdb_id, id_goodreads, imdbid)*
+   - **book_genres.csv**: *(book_id, genre, possible_filter)*
+  
+5. **CPI Scores**
+  Source: [Consumer Price Index U.S.](https://fred.stlouisfed.org/series/CPIAUCNS )
+   - **CPIAUCNS.csv**: *DATE,CPIAUCNS*
 
 ### Datasets Extracted from Jupyter Notebooks
 
 1. **bookfilm_summaries_with_similarity_and_sentiment.csv**:  
    *(movie_id, book_title, movie_name, book_summary, film_summary, similarity, film_sentiment, film_sentiment_score, book_sentiment, book_sentiment_score)*
+2. **final_dataset.csv**:
+   *(movie_id,movie_cluster,movie_name,release_date,runtime_x,language,country,genres,movie_year,index,id,BookTitle,BookYear,Author,full name,tmdb_id,id_goodreads,imdbid,runtime_y,revenue,book_id,normalized_rating_x,standardized_rating_x,normalized_rating_y,standardized_rating_y,length,review_count)*
 
 ---
 
@@ -53,19 +61,3 @@ The merging process is detailed in the Jupyter Notebook books_movies_cleaning, w
 
 6. **Adding Book Summaries**:  
    - Following the above steps, additional datasets containing book summaries were loaded and merged into the final dataset.
-
----
-
-The merging process can be seen in … which resulted in the final data set … 
-First the movie.metadata.tsv, movies.csv and the wiki_book_movie_ids_matching.csv files were loaded into the jupyter notebook. the movie metadata contains the films and the wiki book contains the film names with corresponding book names. 
-The wiki_book_movie_ids_matching.csv and movies.csv originally contained duplicates which had to be removed. The runtime from the movies.csv were added to the wiki_book_movie_ids_matching.csv using the imdbid. 
-The resulting dataset was merged with the movie.metadata.tsv on movie_name and movie_year. Because there can be more than one movie with the same name for the same book, the movie name was not sufficient to merge therefore the year was used additionally. 
-There were still some duplicates present, which were removed using imdbid movie id id goodreads which are the unique identifiers for each dataset.. 
-the films which used one or more books used for a film were dropped because it does not align with the research questions. 
-45 films with the same name have been released in the same year. To make sure that the 
-films in movie metadata were not merged with the wrong film in the wiki book dataset, they were compared by hand using the runtimes in movie metadata and runtimes added from movies to wiki. If that did not suffice, the tmdb database was used to compare other entries. Therefore movie matches could be corrected if necessary. 
-Following this the dataset … were loaded which contains the book summaries. They were 
-
-
-
-
