@@ -69,12 +69,8 @@ The success of a movie depends on confounders that are unrelated to whether it i
 
 
 ## Organization within the team:
-- Luca : Finding suitable language models, work with language models, data visualisations
+- Luca : Finding suitable language models, work with language models, data visualisations, statistical model fitting
 - Danja: Dataset research,  first part of dataset merge, search methods, story telling
 - Silvan: Second part of dataset merge, readme formatting, confounders identification and matching
 - Robin: Dataset research, abstract, readme formatting, confounders identification and matching
-- Franziska: Github organisation, clean jupyter notebooks, create clean python files, conception of website
-
-
-
-## Questions for TAs:
+- Franziska: Github organisation, clean jupyter notebooks, create clean python files, conception of website, statistical model fitting
