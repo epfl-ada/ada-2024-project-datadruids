@@ -49,3 +49,6 @@ def load_data():
     books_df.to_csv('../../data/books.csv', index=False)
     booksmovies_df.to_csv('../../data/booksmovies.csv', index=False)
 
+
+if __name__ == '__main__':
+    load_data()
