@@ -161,3 +161,15 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 /.idea/
+/data/book_genres.csv
+/data/bookfilm_summaries_with_similarity_and_sentiment.csv
+/data/books.csv
+/data/booksmovies.csv
+/data/booksummaries_cleaned.csv
+/data/CPIAUCNS.csv
+/data/merged_movies_books_cleaned.csv
+/data/movie_metadata.tsv
+/data/movies.csv
+/data/plot_summaries.txt
+/data/TMDB_movie_dataset_reduced.csv
+/data/wiki_book_movie_ids_matching.csv
