@@ -173,3 +173,4 @@ cython_debug/
 /data/plot_summaries.txt
 /data/TMDB_movie_dataset_reduced.csv
 /data/wiki_book_movie_ids_matching.csv
+/src/budget_vs_revenue_log_plot.html
