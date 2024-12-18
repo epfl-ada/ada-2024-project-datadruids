@@ -147,8 +147,8 @@ def create_train_test_split(data_df, target_column, should_split_based_on_book=F
         X_train_standardized = pd.DataFrame(X_train_standardized, columns=list(X.columns))
         X_test_standardized = pd.DataFrame(X_test_standardized, columns=list(X.columns))
 
-        X_train = sm.add_constant(X_train_standardized)
-        X_test = sm.add_constant(X_test_standardized)
+        X_train = sm.add_constant(X_train_standardized, has_constant = 'add')
+        X_test = sm.add_constant(X_test_standardized, has_constant = 'add')
         y_train = y_train_raw.values
         y_test = y_test_raw.values
 
