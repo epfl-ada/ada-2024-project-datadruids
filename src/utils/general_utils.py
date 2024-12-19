@@ -12,6 +12,17 @@ from sklearn.preprocessing import StandardScaler
 
 from sklearn.model_selection import KFold
 
+
+def load_final_dataset(path_final_dataset = './data/final_dataset.csv' ):
+    # the dataframe loaded is the final dataset, see notebook books_movies_cleaning.ipynb to see how books and movies are matched
+    df_books_movies = pd.read_csv(path_final_dataset)
+    df_books_movies.drop(columns=['Unnamed: 0'], inplace=True)
+    df_books_movies.dropna(subset = ['revenue', 'budget'], inplace=True)
+    df_books_movies = df_books_movies[df_books_movies['revenue']!=0]
+    df_books_movies = df_books_movies[df_books_movies['budget']!=0]
+    return df_books_movies
+
+
 # def adjust_for_inflation_final_dataset(data, df_revenue) :
 #     inflation = pd.read_csv('./../data/CPIAUCNS.csv', parse_dates=['DATE'])
 

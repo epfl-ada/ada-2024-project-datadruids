@@ -167,7 +167,7 @@ def load_books_movies(path_final_dataset = '../data/final_dataset.csv' ):
     return df_books_movies
 
 def merge_and_clean_sim(books_movies_adj):
-    similarities = pd.read_csv('../data/bookfilm_summaries_with_similarity_and_sentiment.csv')
+    similarities = pd.read_csv('./data/bookfilm_summaries_with_similarity_and_sentiment.csv')
     merged_df = books_movies_adj.merge(similarities, how = 'left', on= 'movie_id')
 
     # Group by 'book_id' and 'movie_id', then calculate the mean for 'similarity' and 'book_sentiment_score' to get rid of doubled columns for similarity scores
@@ -186,7 +186,7 @@ def merge_and_clean_sim(books_movies_adj):
     return merged_df
 
 def books_features_preprocessing(book_sim_genres):
-    books_df = pd.read_csv('../data/books.csv')
+    books_df = pd.read_csv('./data/books.csv')
 
     books_df_final = book_sim_genres.merge(books_df, how = 'left', on='book_id')
     books_df_final['part_of_series'] = books_df_final['series'].notna().astype(int)
