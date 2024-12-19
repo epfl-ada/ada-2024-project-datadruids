@@ -1,16 +1,69 @@
 import pandas as pd
+import numpy as np
+
 import plotly.express as px
+import plotly.graph_objects as go
+
 import matplotlib.pyplot as plt
 
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split, KFold
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
-import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 
-from sklearn.model_selection import KFold
+color_palette_1 = {
+        **{feature: (
+            '#CC6677' if feature == 'book_genre_thriller' else
+            '#332288' if feature == 'similarity' else
+            '#DDCC77' if feature == 'movie_runtime' else
+            '#117733' if feature == 'movie_genre_adventure' else
+            '#882255' if feature == 'book_in_series' else
+            '#44AA99' if feature == 'movie_year' else
+            '#999933' if feature == 'book_3_stars_percentage' else
+            '#AA4499' if feature == 'movie_adjusted_budget' else
+            '#BBCCEE' if feature == 'movie_popularity' else
+            '#88CCEE' if feature == 'movie_vote_count' else
+            '#CCDDAA' if feature == 'book_in_series' else
+            '#EEEEBB' if feature ==  'movie_genres_count' else
+            'grey'  # Default grey for everything else
+        ) for feature in [
+            'book_3_stars_percentage', 'book_rating_count', 'book_genre_thriller',
+            'book_in_series', 'book_review_count', 'book_genre_adventure',
+            'book_5_stars_percentage', 'book_normalized_rating', 'book_year',
+            'book_sentiment_positive', 'book_sentiment_score', 'similarity',
+            'movie_sentiment_positive', 'movie_sentiment_score',
+            'movie_adjusted_budget', 'movie_adjusted_revenue', 'movie_runtime',
+            'movie_year', 'movie_vote_average', 'movie_vote_count',
+            'movie_popularity', 'movie_genre_adventure',
+            'sentiment_difference', 'book_5_stars_percentage']}
+    }
+
+# Define the color palette
+color_palette_lin_reg = {
+    # Genres in dark grey except genres_adventure
+    **{f'genres_{genre}': ('#882255' if genre == 'Adventure' else 'grey') for genre in [
+        'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 
+        'History', 'Horror', 'Music', 'Mystery', 'Romance', 'Science Fiction', 'Thriller', 'War']},
+    # Production Countries in dark grey except production_countries_United States of America
+    **{f'production_countries_{country}': ('#CC6677' if country == 'United States of America' else 'grey') for country in [
+        'Australia', 'Canada', 'China', 'France', 'Germany', 'India', 'Italy', 'Japan', 'Russia', 
+        'Spain', 'United Kingdom', 'United States of America']},
+    # Spoken Languages in dark grey
+    **{f'spoken_languages_{lang}': 'grey' for lang in [
+        'English', 'French', 'German', 'Hindi', 'Italian', 'Japanese', 'Mandarin', 'Russian', 'Spanish']},
+    # Others with specific colors
+    'const': '#2E2E2E',
+    'vote_count': '#88CCEE',
+    'runtime': '#2E2E2E',
+    'adult': 'grey',
+    'popularity': '#117733',
+    'movie_year': '#44AA99',
+    'adjusted_budget': '#DDCC77',
+    'adjusted_revenue': '#999933',
+    'based_on_book': '#AA4499',
+    'vote_average': '#332288'
+}
 
 
 def load_final_dataset(path_final_dataset = './data/final_dataset.csv' ):
@@ -203,18 +256,26 @@ def quadrant_revenue(df_revenue, revenue_column, title, width=900, height=500):
 
 
 def plot_regression(results, title) :
+    color_palette = color_palette_lin_reg
     to_include = results.params[results.pvalues < 0.10][1:].sort_values() # get only those with significant pvalues
-    fig, ax = plt.subplots(figsize=(5,6), dpi=100)
-    ax.scatter(to_include, range(len(to_include)), color="#1a9988", zorder=2)
-    ax.set_yticks(range(len(to_include)), to_include.index) # label the y axis with the ind. variable names
+    fig, ax = plt.subplots(figsize=(5, 6), dpi=100)
+
+    # Scatter plot for feature values with matching colors
+    colors = [color_palette.get(feature, "#eb5600") for feature in to_include.index]
+    ax.scatter(to_include, range(len(to_include)), color=colors, zorder=2)
+
+    # Add labels and title
+    ax.set_yticks(range(len(to_include)), to_include.index)
+
     ax.set_xlabel("Proportional Effect")
-    ax.set_title(title)
+    ax.set_title("Strength of Relationships of Bobs\n", fontsize=16, fontweight='bold', loc='center')
 
-    # add the confidence interval error bars
+
     for idx, ci in enumerate(results.conf_int().loc[to_include.index].iterrows()):
-        ax.hlines(idx, ci[1][0], ci[1][1], color="#eb5600", zorder=1, linewidth=3)
+        ax.hlines(idx, ci[1][0], ci[1][1], color=colors[idx], alpha=0.5, zorder=1, linewidth=3)
 
-    plt.axline((0,0), (0,1), color="#eb5600", linestyle="--")
+    # Add a dashed line at 0
+    plt.axline((0, 0), (0, 1), color="grey", linestyle="--")
     plt.show()
 
 def find_best_params_random_forest(X_train, y_train, param_grid) :
@@ -300,3 +361,252 @@ def extract_films_quizz(X_not_book, X_book,pairs, total_rev, book_perc, num_film
 
     results_df = pd.DataFrame(results)
     return results_df
+
+def create_error_plot_regression(results, text, cp = "Linear Regression") :
+    
+    if cp == "Linear Regression" :
+        color_palette = color_palette_lin_reg
+    else : 
+        color_palette = color_palette_1
+
+    to_include = results.params[results.pvalues < 0.10][1:].sort_values() # get only those with significant pvalues
+    confidence_intervals = results.conf_int().loc[to_include.index]
+    ci_values = confidence_intervals.values
+    colors = [color_palette.get(feature, "#eb5600") for feature in to_include.index]  
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=to_include.values / 1e6,  # Scale x-axis values to 1e6
+        y=to_include.index,
+        mode='markers',
+        marker=dict(size=10, color=colors),
+        name="Proportional Effect",
+        hoverinfo="text",
+        text=[
+            f"Feature: {feature}<br>Proportional Effect: {effect / 1e6:.2f} Millions<br>CI: ({ci[0] / 1e6:.2f} Millions, {ci[1] / 1e6:.2f} Millions)"
+            for feature, effect, ci in zip(to_include.index, to_include.values.astype(float), ci_values.astype(float))
+        ]
+    ))
+
+
+    for i, (ci, color) in enumerate(zip(ci_values, colors)):
+        fig.add_shape(
+            type="line",
+            x0=ci[0] / 1e6,  # Lower CI bound
+            x1=ci[1] / 1e6,  # Upper CI bound
+            y0=i,  
+            y1=i,  
+            line=dict(color=color, width=4, dash='solid')  
+        )
+
+    fig.add_vline(
+        x=0,
+        line=dict(color="red", width=1, dash='dash'),
+    )
+    fig.update_layout(
+        title=dict(
+            text=text,  # Bold the title
+            x=0.02,  
+        ),
+        xaxis=dict(
+            title="Proportional Effect (in Millions)",
+            tickvals=[-40, -20, 0, 20, 40, 60, 80],
+        ),
+
+        yaxis=dict(
+            title="",
+            tickmode="array",
+            tickvals=list(range(len(to_include.index))),
+            ticktext=list(to_include.index)
+        ),
+        template="plotly_white",
+        width=800,
+        height=650
+    )
+
+    fig.show()
+
+
+def create_interactive_bar_chart(feature_importances, text) :
+
+    color_palette = color_palette_lin_reg
+    # Create interactive bar chart
+    fig = px.bar(
+        feature_importances.head(10),
+        y='Feature',
+        x='Importance',
+        color='Feature',
+        color_discrete_map=color_palette,
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=text,  
+            x=0.02, 
+        ),
+        yaxis=dict(
+            title="",
+            tickmode="array",
+        ),
+        template="plotly_white",
+        width=800,
+        height=650,     
+        showlegend=False,
+
+    )
+
+    # Add tooltips for better interactivity
+    fig.update_traces(
+        hovertemplate='<b>%{y}</b><br>Importance: %{x:.3f}<extra></extra>'
+    )
+
+    fig.show()
+
+
+def bar_plot_multiple_adaptations(relevant_movies) :
+    multi_adapt_2 = relevant_movies[relevant_movies.groupby('BookTitle').BookTitle.transform(len) >= 2]
+    multi_adapt_3 = relevant_movies[relevant_movies.groupby('BookTitle').BookTitle.transform(len) >= 3]
+    multi_adapt_4 = relevant_movies[relevant_movies.groupby('BookTitle').BookTitle.transform(len) >= 4]
+    multi_adapt_5 = relevant_movies[relevant_movies.groupby('BookTitle').BookTitle.transform(len) >= 5]
+
+    Booktitles_2 = multi_adapt_2.value_counts('BookTitle').index.to_list()
+    Booktitles_3 = multi_adapt_3.value_counts('BookTitle').index.to_list()
+    Booktitles_4 = multi_adapt_4.value_counts('BookTitle').index.to_list()
+    Booktitles_5 = multi_adapt_5.value_counts('BookTitle').index.to_list()
+
+    target_columns = ['Runtime', 'Release Year','Similarity','Budget', 'Box Office Revenue']
+    dataframe_columns = ['Runtime', 'Release Year','Similarity','Budget', 'Box Office Revenue', 'BookTitle']
+
+    Std_2_films = pd.DataFrame(columns=dataframe_columns)
+    Std_3_films = pd.DataFrame(columns=dataframe_columns)
+    Std_4_films = pd.DataFrame(columns=dataframe_columns)
+    Std_5_films = pd.DataFrame(columns=dataframe_columns)
+
+    for title in Booktitles_2:
+        df = multi_adapt_2[multi_adapt_2['BookTitle']==title]
+        df = df[target_columns]
+        scaler = StandardScaler()
+        df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+        df.sort_values('Box Office Revenue', ascending=False, inplace=True)
+        df['BookTitle'] = title
+        Std_2_films = pd.concat([Std_2_films,df])
+    Std_2_films.reset_index(drop=True,inplace=True)
+
+    for title in Booktitles_3:
+        df = multi_adapt_3[multi_adapt_3['BookTitle']==title]
+        df = df[target_columns]
+        scaler = StandardScaler()
+        df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+        df.sort_values('Box Office Revenue', ascending=False, inplace=True)
+        df['BookTitle'] = title
+        Std_3_films = pd.concat([Std_3_films,df])
+    Std_3_films.reset_index(drop=True,inplace=True)
+
+    for title in Booktitles_4:
+        df = multi_adapt_4[multi_adapt_4['BookTitle']==title]
+        df = df[target_columns]
+        scaler = StandardScaler()
+        df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+        df.sort_values('Box Office Revenue', ascending=False, inplace=True)
+        df['BookTitle'] = title
+        Std_4_films = pd.concat([Std_4_films,df])
+    Std_4_films.reset_index(drop=True,inplace=True)
+
+    for title in Booktitles_5:
+        df = multi_adapt_5[multi_adapt_3['BookTitle']==title]
+        df = df[target_columns]
+        scaler = StandardScaler()
+        df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+        df.sort_values('Box Office Revenue', ascending=False, inplace=True)
+        df['BookTitle'] = title
+        Std_5_films = pd.concat([Std_5_films,df])
+    Std_5_films.reset_index(drop=True,inplace=True)
+
+    Positive_revenue_films_2 = Std_2_films[(Std_2_films['Box Office Revenue']>1.01) | ((Std_2_films['Box Office Revenue'] >0)&(Std_2_films['Box Office Revenue']<0.999 ))]
+    Positive_revenue_films_3 = Std_3_films[(Std_3_films['Box Office Revenue']>0) & (Std_3_films['Box Office Revenue'] !=1.000000)]
+    Positive_revenue_films_4 = Std_4_films[(Std_4_films['Box Office Revenue']>0) & (Std_4_films['Box Office Revenue'] !=1.000000)]
+    Positive_revenue_films_5 = Std_5_films[(Std_5_films['Box Office Revenue']>0) & (Std_5_films['Box Office Revenue'] !=1.000000)]
+
+
+
+    colors = {'Runtime':'#2E2E2E',
+        'Release Year':'#44AA99',
+        'Similarity': 'sandybrown',
+        'Budget':'#DDCC77',
+        'Box Office Revenue':'#999933'
+    }
+
+    datasets = [
+        {col: Positive_revenue_films_2[col].values for col in target_columns},
+        {col: Positive_revenue_films_3[col].values for col in target_columns},
+        {col: Positive_revenue_films_4[col].values for col in target_columns},
+        {col: Positive_revenue_films_5[col].values for col in target_columns},
+    ]
+
+    # Step 3: Create the initial figure with box plots for the first dataset
+    fig = go.Figure()
+
+    for col in target_columns:
+        fig.add_trace(
+            go.Box(
+                y=datasets[0][col],  # Use the first dataset
+                name=col,            # Label the boxplot with the column name
+                marker_color = colors[col]
+                
+        )
+        )
+
+    # Step 4: Define the slider steps
+    steps = []
+    for i, dataset in enumerate(datasets):
+        step = dict(
+            method="update",
+            args=[
+                {"y": [dataset[col] for col in target_columns]},  # Update y-values for all traces
+                {"title": "Standardised features of best performing adaptations"}         # Update the plot title
+            ],
+            label=f"Bobs with {i + 1} sibling(s) or more"  # Label for the slider step
+        )
+        steps.append(step)
+
+    # Step 5: Add slider to the layout
+    sliders = [dict(
+        active=0,
+        currentvalue={"prefix": ""},
+        pad={"t": 50},  # Padding to position the slider
+        steps=steps
+    )]
+
+    fig.update_layout(
+        sliders=sliders,
+        title="Standardised features of best performing adaptations",
+        yaxis_title="Relative placement in std deviations"
+    )
+
+
+    fig.update_layout(
+            width=None,
+            height=None,
+            template='plotly_white'
+        )
+    # Display the plot
+    fig.show()
+
+
+def prepare_dataset_for_revbudfrac_approach(regression_dataset_processed_rb_ration_df):
+
+    #Instead of predicting Revenue, the y value will be Revenue divided by Budget
+    # ensure that log is defined and we do not divide by 0 later
+    regression_dataset_processed_rb_ration_df['adjusted_revenue'] = regression_dataset_processed_rb_ration_df['adjusted_revenue'].clip(lower=1e-10)
+    regression_dataset_processed_rb_ration_df['adjusted_budget'] = regression_dataset_processed_rb_ration_df['adjusted_budget'].clip(lower=1e-10)
+
+    regression_dataset_processed_rb_ration_df.loc[regression_dataset_processed_rb_ration_df['adjusted_budget'] == 1, 'adjusted_budget'] = 1 + 1e-10
+
+    regression_dataset_processed_rb_ration_df['log_rb_ratio'] = np.log(regression_dataset_processed_rb_ration_df['adjusted_revenue']) / np.log(regression_dataset_processed_rb_ration_df['adjusted_budget'])
+    print("min ratio:", regression_dataset_processed_rb_ration_df['log_rb_ratio'].min())
+    print("max ratio:", regression_dataset_processed_rb_ration_df['log_rb_ratio'].max())
+
+    regression_dataset_processed_rb_ration_df.drop(columns=['adjusted_revenue', 'adjusted_budget'], inplace=True)
+
+    return regression_dataset_processed_rb_ration_df
