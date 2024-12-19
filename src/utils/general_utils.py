@@ -1,6 +1,17 @@
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+
+
+from sklearn.model_selection import KFold
+
 # def adjust_for_inflation_final_dataset(data, df_revenue) :
 #     inflation = pd.read_csv('./../data/CPIAUCNS.csv', parse_dates=['DATE'])
 
@@ -194,3 +205,87 @@ def plot_regression(results, title) :
 
     plt.axline((0,0), (0,1), color="#eb5600", linestyle="--")
     plt.show()
+
+def find_best_params_random_forest(X_train, y_train, param_grid) :
+    model = RandomForestRegressor(random_state=42)
+    cv = KFold(n_splits=5, shuffle=True, random_state=42)
+
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=cv, scoring='neg_mean_squared_error')
+    grid_search.fit(X_train, y_train.ravel())
+    best_params = grid_search.best_params_
+    print('Best parameters:', best_params)
+    return best_params
+
+
+def standardize_dataset_matching(regression_dataset_processed_df) :
+    
+    columns = ['vote_count', 'movie_year', 'adjusted_budget', 'adjusted_revenue', 'runtime', 'popularity', 'vote_average', 'genres_Adventure', 'genres_count']
+    scaler = StandardScaler()
+    scaler.fit_transform(regression_dataset_processed_df[columns])
+
+    regression_dataset_normalized= pd.DataFrame(scaler.transform(regression_dataset_processed_df[columns]), columns=columns)
+    regression_dataset_normalized["id"] = regression_dataset_processed_df["id"]
+    regression_dataset_normalized["notnorm_revenue"] = regression_dataset_processed_df["adjusted_revenue"]
+    regression_dataset_normalized["notnorm_budget"] = regression_dataset_processed_df["adjusted_budget"]
+    regression_dataset_normalized["based_on_book"] = regression_dataset_processed_df["based_on_book"]
+    regression_dataset_normalized["title"] = regression_dataset_processed_df["title"]
+
+    print(regression_dataset_normalized['based_on_book'].sum())
+
+    X_not_book = regression_dataset_normalized[regression_dataset_normalized['based_on_book'] == False].copy().reset_index(drop=True)
+    X_book = regression_dataset_normalized[regression_dataset_normalized['based_on_book'] == True].copy().reset_index(drop=True)
+
+    return X_not_book, X_book
+
+
+def calculate_propensity_score(data, coeffs) :
+    return (coeffs[0] * data["vote_count"] + coeffs[1] * data["movie_year"] + coeffs[2] * data["adjusted_budget"] + coeffs[3] * data["runtime"] + coeffs[4] * data["popularity"] + coeffs[5] * data["vote_average"] + coeffs[6] * data["genres_Adventure"] + coeffs[7] * data["genres_count"])
+
+
+def matching(X_not_book, X_book ) :
+    X_not_book_drop = X_not_book.copy()
+    pairs = []
+    for index in range(len(X_book)):
+        df_sort = X_not_book_drop.iloc[(X_not_book_drop['Propensity']-X_book["Propensity"][index]).abs().argsort()[:2]]
+        df_sort = abs(X_book['Propensity'][index] - df_sort["Propensity"])
+        df_sort.sort_values(inplace=True)
+        if df_sort[df_sort.index[0]] / abs(X_book["Propensity"][index]) <= 0.001:
+                pairs.append([index, df_sort.index[0]])
+                X_not_book_drop.drop(df_sort.index[0], inplace=True)
+            
+
+    return pairs
+
+def create_histogram_matching(X_not_book, X_book, pairs):
+    sum = 0
+    book_rev = []
+    not_book_rev = []
+    book_perc = []
+    total_rev = []
+    for i in range(len(pairs)):
+        sum += (X_book['adjusted_revenue'][pairs[i][0]]) >= (X_not_book['adjusted_revenue'][pairs[i][1]])
+        book_rev.append(X_book['notnorm_revenue'][pairs[i][0]])
+        not_book_rev.append(X_not_book['notnorm_revenue'][pairs[i][1]])
+
+        book_perc.append((X_book["notnorm_revenue"][pairs[i][0]] - X_not_book["notnorm_revenue"][pairs[i][1]]))#/X_not_book["notnorm_revenue"][pairs[i][1]])
+        total_rev.append((X_book["notnorm_revenue"][pairs[i][0]] - X_not_book["notnorm_revenue"][pairs[i][1]]))
+    print(np.median(book_rev), np.median(not_book_rev), np.median(np.sort(book_perc)[0:-1]), np.mean(np.sort(book_perc)[0:-1]))
+    plt.hist(np.sort(book_perc)[0:-1], bins=100)
+    plt.grid()
+    print("The revenue of the book based film was better for a total of %d times out of %d (ratio %.4f)" %(sum, len(pairs), sum/len(pairs)))
+    return total_rev, book_perc
+
+def extract_films_quizz(X_not_book, X_book,pairs, total_rev, book_perc, num_films) :
+    results = []
+    for item in range(num_films):
+        i = sorted(range(len(total_rev)), key=lambda k: total_rev[k])[-(item + 1)]  # Get index of the top revenue
+        results.append({
+            "BOB Title": X_book["title"][pairs[i][0]],
+            "NOB Title": X_not_book["title"][pairs[i][1]],
+            "Difference": round(book_perc[item], 0),
+            "BOB Revenue": round(X_book["notnorm_revenue"][pairs[i][0]], 2),
+            "NOB Revenue": round(X_not_book["notnorm_revenue"][pairs[i][1]], 2)
+        })
+
+    results_df = pd.DataFrame(results)
+    return results_df
