@@ -666,3 +666,37 @@ def perform_linear_regression(X_train, X_test, y_train, y_test) :
     print("RMSE value:", rmse)
 
     return results
+
+def random_forest_grid_search(X_train, y_train, param_grid) :
+    # # HYPERPARAMETERS
+    model = RandomForestRegressor(random_state=42)
+    cv = KFold(n_splits=5, shuffle=True, random_state=42)
+
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=cv, scoring='neg_mean_squared_error')
+    grid_search.fit(X_train, y_train.ravel())
+    best_params = grid_search.best_params_
+
+  
+    return best_params
+
+def train_model_with_best_params(X_train, X_test, y_train, y_test, best_params) :
+    best_model = RandomForestRegressor(**best_params, random_state=42)
+    best_model.fit(X_train, y_train.ravel())
+
+    predictions = best_model.predict(X_test)
+
+    rmse = np.sqrt(mean_squared_error(y_test, predictions))
+    print('Validation error (RMSE):', rmse)
+    r2 = r2_score(y_test, predictions)
+    print('R^2 Score:', r2)
+
+    importances = best_model.feature_importances_
+
+    feature_importances = pd.DataFrame({
+        'Feature': X_train.columns,
+        'Importance': importances
+    })
+
+    feature_importances = feature_importances.sort_values(by='Importance', ascending=False)
+
+    return feature_importances, best_model
