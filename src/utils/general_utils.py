@@ -675,7 +675,7 @@ def random_forest_grid_search(X_train, y_train, param_grid) :
     grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=cv, scoring='neg_mean_squared_error')
     grid_search.fit(X_train, y_train.ravel())
     best_params = grid_search.best_params_
-    best_params = {'bootstrap': True, 'max_depth': 15, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 100}
+
   
     return best_params
 
@@ -699,4 +699,4 @@ def train_model_with_best_params(X_train, X_test, y_train, y_test, best_params) 
 
     feature_importances = feature_importances.sort_values(by='Importance', ascending=False)
 
-    return feature_importances
+    return feature_importances, best_model
