@@ -359,20 +359,55 @@ def create_histogram_matching(X_not_book, X_book, pairs):
 
         book_perc.append((X_book["notnorm_revenue"][pairs[i][0]] - X_not_book["notnorm_revenue"][pairs[i][1]]))#/X_not_book["notnorm_revenue"][pairs[i][1]])
         total_rev.append((X_book["notnorm_revenue"][pairs[i][0]] - X_not_book["notnorm_revenue"][pairs[i][1]]))
-    print(np.median(book_rev), np.median(not_book_rev), np.median(np.sort(book_perc)[0:-1]), np.mean(np.sort(book_perc)[0:-1]))
+    print("The revenue of the book based film was better for a total of %d times out of %d (ratio %.4f)" %(sum, len(pairs), sum/len(pairs)))
+    
+    print("The median difference of revenues (Bob - Nob) is %d $ while the mean is %d $" %(np.median(np.sort(book_perc)[0:-1]), np.mean(np.sort(book_perc)[0:-1])))
     plt.hist(np.sort(book_perc)[0:-1], bins=100)
+    plt.title("Revenue difference between Bobs and Nobs")
+    plt.xlabel("Revenue difference [$]")
     plt.grid()
     print("The revenue of the book based film was better for a total of %d times out of %d (ratio %.4f)" %(sum, len(pairs), sum/len(pairs)))
     return total_rev, book_perc
 
+def boxplot_matching(X_not_book, X_book, pairs):
+
+    df_boxplot = pd.DataFrame()
+    df_boxplot['NOB'] = X_not_book["notnorm_revenue"][[pairs[i][1] for i in range(len(pairs))]].reset_index(drop=True)
+    df_boxplot["BOB"] = X_book["notnorm_revenue"][np.sort([pairs[i][0] for i in range(len(pairs))])].reset_index(drop=True)
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Box(x=df_boxplot['NOB'], name='Nob', boxmean=True, orientation='h', marker_color = '#44AA99', legendrank=2))
+    fig.add_trace(go.Box(x=df_boxplot['BOB'], name='Bob', boxmean=True, orientation='h', marker_color = 'sandybrown' ,legendrank=1))
+
+    fig.update_layout(
+        title='Revenue of matched Nobs and Bobs',
+        xaxis=dict(
+            title='Revenue [$]',
+            type='log'
+        ),
+        yaxis=dict(
+            title=''
+        )
+    )
+    fig.update_layout(
+            width=None,
+            height=None,
+            template='plotly_white'
+        )
+
+    # Show the figure
+    fig.show()
+    return
+
 def extract_films_quizz(X_not_book, X_book,pairs, total_rev, book_perc, num_films) :
     results = []
     for item in range(num_films):
-        i = sorted(range(len(total_rev)), key=lambda k: total_rev[k])[-(item + 1)]  # Get index of the top revenue
+        i = total_rev.index(np.sort(total_rev)[-(item + 1)])  # Get index of the top revenue
         results.append({
             "BOB Title": X_book["title"][pairs[i][0]],
             "NOB Title": X_not_book["title"][pairs[i][1]],
-            "Difference": round(book_perc[item], 0),
+            "Difference": round(book_perc[i], 0),
             "BOB Revenue": round(X_book["notnorm_revenue"][pairs[i][0]], 2),
             "NOB Revenue": round(X_not_book["notnorm_revenue"][pairs[i][1]], 2)
         })
