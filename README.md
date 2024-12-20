@@ -66,4 +66,4 @@ Using regression methods and descriptive statistics and keeping in mind the iden
 - Danja: Dataset research,  first part of dataset merge, search methods, primary data visualization, confounder identification, story telling
 - Silvan: Second part of dataset merge, readme formatting, matching, multiple adabtation analysis, story telling
 - Robin: Dataset research, abstract, readme formatting, matching, statistical model fitting, story telling
-- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, organisation and cleaning of finel notebook
+- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, organisation and cleaning of final notebook
