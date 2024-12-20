@@ -39,22 +39,22 @@ color_palette_1 = {
             'sentiment_difference', 'book_5_stars_percentage']}
     }
 
-# Define the color palette
 color_palette_lin_reg = {
     # Genres in dark grey except genres_adventure
     **{f'genres_{genre}': ('#882255' if genre == 'Adventure' else 'grey') for genre in [
         'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 
         'History', 'Horror', 'Music', 'Mystery', 'Romance', 'Science Fiction', 'Thriller', 'War']},
     # Production Countries in dark grey except production_countries_United States of America
-    **{f'production_countries_{country}': ('#CC6677' if country == 'United States of America' else 'grey') for country in [
+    **{f'production_countries_{country}': ('#CC6677' if country == 'USA' else 'grey') for country in [
         'Australia', 'Canada', 'China', 'France', 'Germany', 'India', 'Italy', 'Japan', 'Russia', 
         'Spain', 'United Kingdom', 'United States of America']},
     # Spoken Languages in dark grey
     **{f'spoken_languages_{lang}': 'grey' for lang in [
-        'English', 'French', 'German', 'Hindi', 'Italian', 'Japanese', 'Mandarin', 'Russian', 'Spanish']},
+        'English', 'French', 'German', 'Hindi', 'Italian', 'Japanese', 'Mandarin', 'Russian', 'Spanish', 'count']},
     # Others with specific colors
     'const': '#2E2E2E',
     'vote_count': '#88CCEE',
+    'genres_count': '#999933',
     'runtime': '#2E2E2E',
     'adult': 'grey',
     'popularity': '#117733',
