@@ -4,6 +4,8 @@
 Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that has not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
 This data story will try to educate a director in regard to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie and book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection, screenwriting and casting. 
 
+## Datastory
+The datastory in form of a letter to a director can be found [here](https://ffriedli.github.io/ada-datadruids-website/).
 
 ## Research Questions:
 - How advantageous is it for a movie to be based on a book?
@@ -48,29 +50,20 @@ Sentence transformer embeddings are used to measure the similarity between summa
 Similarly, summary sentiments are computed. As for the embeddings, the summaries are divided into chunks that receive a sentiment score which is then averaged and compared. This approach provides a holistic view of sentiment similarity, which is another factor that may impact adaptation success. For similar reasons as with the summary similarity, [siebert/sentiment-roberta-large-english](https://huggingface.co/siebert/sentiment-roberta-large-english) was selected for this task.
 
 ### Success metric
-The analysis will be performed regarding two success metrics, box office revenue and reviews. First, they are treated separately to reduce potential biases, but can be combined later for further analysis.
+The analysis will be performed regarding two success metrics, box office revenue and reviews. They are treated separately to reduce potential biases caused by combining them.
 
 ### Search for confounders
-Regression models will be used to find which factors correlate the most with movie success. This is done on all movies in the dataset and can be used to identify confounders that are unrelated to whether the movie is based on a book or not. They need to be controlled for further analysis.
+Regression models and random forests will be used to find which factors correlate the most with movie success. This is done on all movies in the dataset and can be used to identify confounders that are unrelated to whether the movie is based on a book or not. They need to be controlled for further analysis.
 
 ### Matching analysis
 The success of a movie depends on confounders that are unrelated to whether it is based on a book or not. The benefit of basing a movie on a book can be determined through pairwise matching. A propensity score is calculated based on confounders identified beforehand. Movies with similar propensity scores are then matched with the main difference being whether they are based on a book or not.
 
 ### Interpretation and conclusions
-Using regression methods, ANOVA and descriptive statistics and keeping in mind the identified confounders the most important correlations can be found. Analysing these results will hopefully enable meaningful conclusions.
+Using regression methods, ANOVA and descriptive statistics and keeping in mind the identified confounders the most important correlations can be found. Analysing these results will enable meaningful conclusions.
 
-## Proposed timeline
-1. Clean and Prepare dataset by matching films with books and adding summaries from film and books such as missing box office revenues 
-2. Define Methods
-3. Assign methods (finished by 13.11)
-4. Create relevant Plots (started before 15.11, finished by 6.12)
-5. Create Web Site 
-6. Storytelling, add interactive features (finished by 18.12)
-
-
-## Organization within the team:
-- Luca : Finding suitable language models, work with language models, data visualisations, statistical model fitting
-- Danja: Dataset research,  first part of dataset merge, search methods, primary data visualization, story telling
-- Silvan: Second part of dataset merge, readme formatting, confounders identification and matching
-- Robin: Dataset research, abstract, readme formatting, confounders identification and matching
-- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, statistical model fitting
+## Contributions:
+- Luca : Finding suitable language models, work with language models, data visualisations, confounder identification, website design
+- Danja: Dataset research,  first part of dataset merge, search methods, primary data visualization, confounder identification, story telling
+- Silvan: Second part of dataset merge, readme formatting, matching, multiple adabtation analysis, story telling
+- Robin: Dataset research, abstract, readme formatting, matching, statistical model fitting, story telling
+- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, organisation and cleaning of finel notebook
