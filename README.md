@@ -1,8 +1,8 @@
 # Finding the next Lord of the Rings: From Book to Cinematic Glory
 
 ## Abstract:
-Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that has not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? 
-This data story will try to educate a director in regard to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie and book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection, screenwriting and casting. 
+Books have been adapted into movies since the dawn of cinema. “Tarzan” alone has been adapted nearly forty times. Many questions arise with this fact. Why have so many directors decided to make a movie about this exact book, rather than choosing one that has not yet adapted into a movie? Is there an actual advantage of doing yet another interpretation of a classic, or are the first adaptations normally the best performing ones? Should a good film be based on a book in the first place?
+This data story will try to educate a director in regard to these common pitfalls and trends when it comes to visualizing the written worlds. This will be done by analyzing reviews, movie and book summaries, and money flows. The obtained results can give the director a glimpse into adaptations from the past, to guide their decisions in book selection and screenwriting.
 
 ## Datastory
 The datastory in form of a letter to a director can be found [here](https://ffriedli.github.io/ada-datadruids-website/).
@@ -66,4 +66,4 @@ Using regression methods and descriptive statistics and keeping in mind the iden
 - Danja: Dataset research,  first part of dataset merge, search methods, primary data visualization, confounder identification, story telling
 - Silvan: Second part of dataset merge, readme formatting, matching, multiple adabtation analysis, story telling
 - Robin: Dataset research, abstract, readme formatting, matching, statistical model fitting, story telling
-- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, organisation and cleaning of finel notebook
+- Franziska: GitHub organisation, clean jupyter notebooks, create clean python files, conception of website, organisation and cleaning of final notebook
