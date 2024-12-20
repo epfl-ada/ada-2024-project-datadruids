@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV, train_test_split, KFold
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler
-
+import statsmodels.api as sm
 
 color_palette_1 = {
         **{feature: (
@@ -65,6 +65,24 @@ color_palette_lin_reg = {
     'vote_average': '#332288'
 }
 
+color_palette_book_reg_lin = {
+    **{feature: ('#4477AA' if feature == 'rating_count' else
+                 '#EE6677' if feature == 'genre_Thriller' else
+                 '#CCBB44' if feature == 'genre_Adventure' else
+                 '#AA3377' if feature == 'part_of_series' else
+                 '#228833' if feature == 'review_count' else
+                 '#66CCEE' if feature == 'three_stars_percentage' else
+                 '#999933' if feature == 'five_stars_percentage' else
+                 'gray') for feature in [
+        'const', 'year', 'avg_rating', 'rating_count', 'review_count', 'length',
+        'standardized_rating', 'normalized_rating', 'part_of_series',
+        'one_star_percentage', 'two_stars_percentage', 'three_stars_percentage',
+        'four_stars_percentage', 'five_stars_percentage', 'genre_count',
+        'genre_Adventure', 'genre_Childrens', 'genre_Classics', 'genre_Crime',
+        'genre_Cultural', 'genre_Fantasy', 'genre_Fiction', 'genre_Historical',
+        'genre_Horror', 'genre_Literature', 'genre_Mystery', 'genre_Romance',
+        'genre_Science Fiction', 'genre_Thriller', 'genre_Young Adult']}
+}
 
 def load_final_dataset(path_final_dataset = './data/final_dataset.csv' ):
     # the dataframe loaded is the final dataset, see notebook books_movies_cleaning.ipynb to see how books and movies are matched
@@ -255,8 +273,8 @@ def quadrant_revenue(df_revenue, revenue_column, title, width=900, height=500):
     fig.show()
 
 
-def plot_regression(results, title) :
-    color_palette = color_palette_lin_reg
+def plot_regression(results,  title, color_palette=color_palette_lin_reg) :
+   
     to_include = results.params[results.pvalues < 0.10][1:].sort_values() # get only those with significant pvalues
     fig, ax = plt.subplots(figsize=(5, 6), dpi=100)
 
@@ -268,7 +286,7 @@ def plot_regression(results, title) :
     ax.set_yticks(range(len(to_include)), to_include.index)
 
     ax.set_xlabel("Proportional Effect")
-    ax.set_title("Strength of Relationships of Bobs\n", fontsize=16, fontweight='bold', loc='center')
+    ax.set_title(title, fontsize=16, fontweight='bold', loc='center')
 
 
     for idx, ci in enumerate(results.conf_int().loc[to_include.index].iterrows()):
@@ -362,14 +380,10 @@ def extract_films_quizz(X_not_book, X_book,pairs, total_rev, book_perc, num_film
     results_df = pd.DataFrame(results)
     return results_df
 
-def create_error_plot_regression(results, text, cp = "Linear Regression") :
+def create_error_plot_regression(results, text, threshold_p_values=0.05, color_palette=color_palette_lin_reg) :
     
-    if cp == "Linear Regression" :
-        color_palette = color_palette_lin_reg
-    else : 
-        color_palette = color_palette_1
 
-    to_include = results.params[results.pvalues < 0.10][1:].sort_values() # get only those with significant pvalues
+    to_include = results.params[results.pvalues < threshold_p_values][1:].sort_values() # get only those with significant pvalues
     confidence_intervals = results.conf_int().loc[to_include.index]
     ci_values = confidence_intervals.values
     colors = [color_palette.get(feature, "#eb5600") for feature in to_include.index]  
@@ -428,9 +442,7 @@ def create_error_plot_regression(results, text, cp = "Linear Regression") :
     fig.show()
 
 
-def create_interactive_bar_chart(feature_importances, text) :
-
-    color_palette = color_palette_lin_reg
+def create_interactive_bar_chart(feature_importances, text, color_palette=color_palette_lin_reg) :
     # Create interactive bar chart
     fig = px.bar(
         feature_importances.head(10),
@@ -478,10 +490,12 @@ def bar_plot_multiple_adaptations(relevant_movies) :
     target_columns = ['Runtime', 'Release Year','Similarity','Budget', 'Box Office Revenue']
     dataframe_columns = ['Runtime', 'Release Year','Similarity','Budget', 'Box Office Revenue', 'BookTitle']
 
-    Std_2_films = pd.DataFrame(columns=dataframe_columns)
-    Std_3_films = pd.DataFrame(columns=dataframe_columns)
-    Std_4_films = pd.DataFrame(columns=dataframe_columns)
-    Std_5_films = pd.DataFrame(columns=dataframe_columns)
+    initial =[[0,0,0,0,0,0]]
+
+    Std_2_films = pd.DataFrame(initial,columns=dataframe_columns)
+    Std_3_films = pd.DataFrame(initial,columns=dataframe_columns)
+    Std_4_films = pd.DataFrame(initial,columns=dataframe_columns)
+    Std_5_films = pd.DataFrame(initial,columns=dataframe_columns)
 
     for title in Booktitles_2:
         df = multi_adapt_2[multi_adapt_2['BookTitle']==title]
@@ -489,7 +503,7 @@ def bar_plot_multiple_adaptations(relevant_movies) :
         scaler = StandardScaler()
         df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
         df.sort_values('Box Office Revenue', ascending=False, inplace=True)
-        df['BookTitle'] = title
+        df = df.assign(BookTitle=title)
         Std_2_films = pd.concat([Std_2_films,df])
     Std_2_films.reset_index(drop=True,inplace=True)
 
@@ -499,7 +513,7 @@ def bar_plot_multiple_adaptations(relevant_movies) :
         scaler = StandardScaler()
         df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
         df.sort_values('Box Office Revenue', ascending=False, inplace=True)
-        df['BookTitle'] = title
+        df = df.assign(BookTitle=title)
         Std_3_films = pd.concat([Std_3_films,df])
     Std_3_films.reset_index(drop=True,inplace=True)
 
@@ -509,17 +523,17 @@ def bar_plot_multiple_adaptations(relevant_movies) :
         scaler = StandardScaler()
         df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
         df.sort_values('Box Office Revenue', ascending=False, inplace=True)
-        df['BookTitle'] = title
+        df = df.assign(BookTitle=title)
         Std_4_films = pd.concat([Std_4_films,df])
     Std_4_films.reset_index(drop=True,inplace=True)
 
     for title in Booktitles_5:
-        df = multi_adapt_5[multi_adapt_3['BookTitle']==title]
+        df = multi_adapt_5[multi_adapt_5['BookTitle']==title]
         df = df[target_columns]
         scaler = StandardScaler()
         df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
         df.sort_values('Box Office Revenue', ascending=False, inplace=True)
-        df['BookTitle'] = title
+        df = df.assign(BookTitle=title)
         Std_5_films = pd.concat([Std_5_films,df])
     Std_5_films.reset_index(drop=True,inplace=True)
 
@@ -527,8 +541,6 @@ def bar_plot_multiple_adaptations(relevant_movies) :
     Positive_revenue_films_3 = Std_3_films[(Std_3_films['Box Office Revenue']>0) & (Std_3_films['Box Office Revenue'] !=1.000000)]
     Positive_revenue_films_4 = Std_4_films[(Std_4_films['Box Office Revenue']>0) & (Std_4_films['Box Office Revenue'] !=1.000000)]
     Positive_revenue_films_5 = Std_5_films[(Std_5_films['Box Office Revenue']>0) & (Std_5_films['Box Office Revenue'] !=1.000000)]
-
-
 
     colors = {'Runtime':'#2E2E2E',
         'Release Year':'#44AA99',
@@ -610,3 +622,12 @@ def prepare_dataset_for_revbudfrac_approach(regression_dataset_processed_rb_rati
     regression_dataset_processed_rb_ration_df.drop(columns=['adjusted_revenue', 'adjusted_budget'], inplace=True)
 
     return regression_dataset_processed_rb_ration_df
+
+def perform_linear_regression(X_train, X_test, y_train, y_test) :
+    model = sm.OLS(y_train, X_train)
+    results = model.fit()
+    y_pred = results.predict(X_test)
+    rmse = np.sqrt(mean_squared_error(y_true=y_test, y_pred=y_pred))
+    print("RMSE value:", rmse)
+
+    return results
