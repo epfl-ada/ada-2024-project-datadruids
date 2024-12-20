@@ -59,7 +59,7 @@ Regression models and random forests will be used to find which factors correlat
 The success of a movie depends on confounders that are unrelated to whether it is based on a book or not. The benefit of basing a movie on a book can be determined through pairwise matching. A propensity score is calculated based on confounders identified beforehand. Movies with similar propensity scores are then matched with the main difference being whether they are based on a book or not.
 
 ### Interpretation and conclusions
-Using regression methods, ANOVA and descriptive statistics and keeping in mind the identified confounders the most important correlations can be found. Analysing these results will enable meaningful conclusions.
+Using regression methods and descriptive statistics and keeping in mind the identified confounders the most important correlations can be found. Analysing these results enables meaningful conclusions.
 
 ## Contributions:
 - Luca : Finding suitable language models, work with language models, data visualisations, confounder identification, website design
